@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CartPilot India - Grocery Cart Comparator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <img class="header-image" src="price-dashboard.png" alt="">
+      <div class="header-shade"></div>
+      <nav class="topbar" aria-label="App navigation">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img"><path d="M6 6h14l-2 9H7.4L6 6Zm0 0 1.1-3H3m6 17a1.2 1.2 0 1 0 0 .1m8.5-.1a1.2 1.2 0 1 0 0 .1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>CartPilot India</span>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="exportBtn" type="button" title="Export cart" aria-label="Export cart">
+            <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <label class="icon-button file-button" title="Import cart" aria-label="Import cart">
+            <input id="importInput" type="file" accept="application/json">
+            <svg viewBox="0 0 24 24"><path d="M12 21V9m0 0 4 4m-4-4-4 4M4 7V4h16v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+        </div>
+      </nav>
+      <section class="hero" aria-labelledby="pageTitle">
+        <p class="eyebrow">Zepto, Blinkit, Toing, JioMart, and Amazon Now</p>
+        <h1 id="pageTitle">Compare your grocery cart before checkout</h1>
+        <div class="search-panel">
+          <label for="locationName">Delivery area</label>
+          <div class="search-row">
+            <input id="locationName" type="search" value="Bengaluru - Indiranagar" autocomplete="off">
+            <button id="saveLocationBtn" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              Save
+            </button>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="controls-band" aria-label="Cart summary">
+        <div class="metric-strip">
+          <div>
+            <span class="metric-label">Best vendor</span>
+            <strong id="bestVendor">-</strong>
+          </div>
+          <div>
+            <span class="metric-label">Best total</span>
+            <strong id="bestTotal">₹0</strong>
+          </div>
+          <div>
+            <span class="metric-label">Cart savings</span>
+            <strong id="savings">₹0</strong>
+          </div>
+          <div>
+            <span class="metric-label">Items</span>
+            <strong id="itemCount">0</strong>
+          </div>
+        </div>
+        <div class="filter-grid">
+          <label>
+            Recommendation priority
+            <select id="priority">
+              <option value="complete">Lowest total, complete cart</option>
+              <option value="fast">Fastest complete delivery</option>
+              <option value="available">Most items available</option>
+              <option value="cheap">Lowest visible bill</option>
+            </select>
+          </label>
+          <label>
+            Max ETA minutes
+            <input id="maxEta" type="number" min="5" max="240" value="90">
+          </label>
+          <label>
+            Minimum availability
+            <input id="minAvailability" type="number" min="1" max="100" value="80">
+          </label>
+          <label class="toggle-row">
+            <input id="onlyServiceable" type="checkbox" checked>
+            <span>Serviceable only</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Grocery comparison workspace">
+        <aside class="entry-panel" aria-labelledby="entryTitle">
+          <h2 id="entryTitle">Add Grocery Item</h2>
+          <form id="itemForm" class="offer-form">
+            <label>Item name<input name="name" required placeholder="Milk, eggs, atta, tomatoes"></label>
+            <div class="two-col">
+              <label>Quantity<input name="quantity" type="number" min="0.1" step="0.1" value="1" required></label>
+              <label>Unit<input name="unit" placeholder="L, kg, pack" value="pack"></label>
+            </div>
+            <label>Category
+              <select name="category">
+                <option>Fresh</option>
+                <option>Dairy</option>
+                <option>Pantry</option>
+                <option>Snacks</option>
+                <option>Household</option>
+              </select>
+            </label>
+            <button type="submit">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m-7-7h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Add item
+            </button>
+          </form>
+
+          <h2 class="subhead">Vendor Charges</h2>
+          <div id="vendorSettings" class="vendor-settings"></div>
+        </aside>
+
+        <section class="results-panel" aria-labelledby="resultsTitle">
+          <div class="section-head">
+            <div>
+              <h2 id="resultsTitle">Cart Comparison</h2>
+              <p id="contextLine">Comparing grocery apps for Bengaluru - Indiranagar</p>
+            </div>
+            <button class="text-button" id="resetBtn" type="button">Reset sample</button>
+          </div>
+          <div id="recommendation" class="recommendation" aria-live="polite"></div>
+          <div id="vendorCards" class="offers-list"></div>
+
+          <div class="matrix-head">
+            <h2>Item Price Matrix</h2>
+            <p>Enter each app's item price from your cart. Leave unavailable items unchecked.</p>
+          </div>
+          <div class="table-wrap">
+            <table id="priceMatrix">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p id="emptyState" class="empty-state" hidden>Add grocery items to start comparing carts.</p>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
